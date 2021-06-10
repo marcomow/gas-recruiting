@@ -1,0 +1,35 @@
+{
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@google/clasp": "^2.3.2",
+    "@types/google-apps-script": "^1.0.33",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "mrm": "^3.0.2",
+    "prettier": "^2.3.0"
+  },
+  "scripts": {
+    "login": "yarn clasp login",
+    "watch": "yarn clasp push --watch",
+    "logout": "yarn clasp logout",
+    "prepare": "husky install",
+    "logs": "clasp logs --watch",
+    "publish": "clasp deploy",
+    "lint:js": "eslint . --ext .js,.jsx",
+    "lint:js:fix": "npm run lint:js -- --fix",
+    "open:gas": "yarn clasp open"
+  },
+  "author": "Orion Black",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx,json,css}": [
+      "prettier --write"
+    ]
+  }
+}
