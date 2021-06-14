@@ -24,6 +24,9 @@ const reachEligibleCandidates = (templateStatus: TemplateStatus) => {
         SpreadsheetApp.openByUrl(entry["spreadsheet"] as string);
       const sheet: GoogleAppsScript.Spreadsheet.Sheet =
         spreadsheet.getSheetByName(entry["name_sheet_master"] as string);
+      // dirty fix to refresh the database's custom formula
+      sheet.appendRow([[""]]);
+      SpreadsheetApp.flush();
       const offsetTop: number = Number(entry["offset_rows"]);
       // TODO add error handling for wrong setup // if(isNaN(offsetTop)){}
       const database: SheetDatabase = reduceSheetToDatabase(sheet, offsetTop);
