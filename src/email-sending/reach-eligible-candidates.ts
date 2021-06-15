@@ -24,9 +24,10 @@ const reachEligibleCandidates = (templateStatus: TemplateStatus) => {
         SpreadsheetApp.openByUrl(entry["spreadsheet"] as string);
       const sheet: GoogleAppsScript.Spreadsheet.Sheet =
         spreadsheet.getSheetByName(entry["name_sheet_master"] as string);
-      // dirty fix to refresh the database's custom formula
-      sheet.appendRow([""]); // adding a row to trigger recalculation
-      sheet.deleteRow(sheet.getMaxRows()); // deleting the same row to avoid enlarging the sheet too much in the long run (it would cause performance issues)
+      // dirty fix to refresh the database's custom formula: triggering a change (so the formula is re-calculated) and waiting for the changes to be applied
+      const dummySheet: GoogleAppsScript.Spreadsheet.Sheet =
+        spreadsheet.insertSheet(); // adding a column to trigger recalculation
+      spreadsheet.deleteSheet(dummySheet); // deleting the same column to avoid enlarging the sheet too much in the long run (it would cause performance issues)
       SpreadsheetApp.flush(); // waiting for the changes to be applied
       // proceed as normal
       const offsetTop: number = Number(entry["offset_rows"]);
