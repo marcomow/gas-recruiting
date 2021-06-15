@@ -1,3 +1,5 @@
+import { CellValue } from "./types/Models";
+
 /**
  * @customfunction
  * @param matrixReference {range} a one-column range.
@@ -6,16 +8,26 @@
  * @return a matrix of matching values
  */
 const CONSOLIDATE = (
-  matrixReference: any | any[][],
-  matrixImport: any[][],
-  indexColumnReference: number = 0
+  matrixReference: CellValue | CellValue[][],
+  matrixImport: CellValue[][],
+  indexColumnReference: number = 0,
+  caseSensitive: boolean = true
 ) => {
   return (
-    matrixReference instanceof Array ? matrixReference : [matrixReference]
-  ).map((referenceRow: any[]): any[] => {
+    (matrixReference instanceof Array
+      ? matrixReference
+      : [matrixReference]) as CellValue[][]
+  ).map((referenceRow: CellValue[]): CellValue[] => {
     return (
-      matrixImport.find((rowImport: any[]): any => {
-        return rowImport[indexColumnReference] === referenceRow[0];
+      matrixImport.find((rowImport: CellValue[]): CellValue => {
+        if (caseSensitive) {
+          return rowImport[indexColumnReference] === referenceRow[0];
+        } else {
+          return (
+            ((rowImport[indexColumnReference] || "") + "").toLowerCase() ===
+            ((referenceRow[0] || "") + "").toLowerCase()
+          );
+        }
       }) || Array.from({ length: matrixImport[0].length }).fill("")
     );
   });
