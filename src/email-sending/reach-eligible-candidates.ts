@@ -6,6 +6,7 @@ import {
   SheetDatabase,
   TemplateStatus,
 } from "../types/Models";
+import { dirtyRefreshSheet } from "../utilities/dirty-refresh-sheet";
 import { reduceSheetToDatabase } from "../utilities/reduce-sheet-to-database";
 import { routineEmailSending } from "./routine-email-sending";
 
@@ -15,6 +16,7 @@ const reachEligibleCandidates = (templateStatus: TemplateStatus) => {
     SpreadsheetApp.getActiveSpreadsheet();
   const dashboardSheet: GoogleAppsScript.Spreadsheet.Sheet =
     dashboardSpreadsheet.getSheetByName(SHEET_SETTINGS.SHEET_FUNNELS_NAME);
+
   const funnelsDatabase: SheetDatabase = reduceSheetToDatabase(dashboardSheet);
   //TODO add check if funnel ids are set up properly funnelsDatabase.ids
   const funnels: Funnel[] = funnelsDatabase.buffer
@@ -24,12 +26,6 @@ const reachEligibleCandidates = (templateStatus: TemplateStatus) => {
         SpreadsheetApp.openByUrl(entry["spreadsheet"] as string);
       const sheet: GoogleAppsScript.Spreadsheet.Sheet =
         spreadsheet.getSheetByName(entry["name_sheet_master"] as string);
-      // dirty fix to refresh the database's custom formula: triggering a change (so the formula is re-calculated) and waiting for the changes to be applied
-      const dummySheet: GoogleAppsScript.Spreadsheet.Sheet =
-        spreadsheet.insertSheet(); // adding a column to trigger recalculation
-      spreadsheet.deleteSheet(dummySheet); // deleting the same column to avoid enlarging the sheet too much in the long run (it would cause performance issues)
-      SpreadsheetApp.flush(); // waiting for the changes to be applied
-      // proceed as normal
       const offsetTop: number = Number(entry["offset_rows"]);
       // TODO add error handling for wrong setup // if(isNaN(offsetTop)){}
       const database: SheetDatabase = reduceSheetToDatabase(sheet, offsetTop);

@@ -4,11 +4,13 @@ import {
   DatabaseId,
   SheetDatabase,
 } from "../types/Models";
+import { dirtyRefreshSheet } from "./dirty-refresh-sheet";
 import { numberToLetters } from "./numbers-to-letters";
 const reduceSheetToDatabase = (
   sheet: GoogleAppsScript.Spreadsheet.Sheet,
   offsetTop: number = 0
 ): SheetDatabase => {
+  dirtyRefreshSheet(sheet);
   return sheet
     .getDataRange()
     .getValues()
