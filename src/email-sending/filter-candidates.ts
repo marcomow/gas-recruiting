@@ -83,6 +83,16 @@ const filterCandidates = (
       return allConditionsSatisfied;
     }
   );
+  if (templateSettings["slice"]) {
+    const amountSlice: number = Number(templateSettings["slice"]);
+    if (!amountSlice) {
+      console.warn(
+        `the value "${templateSettings["slice"]}" of the template "${templateSettings.id}" for funnel "${templateSettings.funnel.name}" is not a number; slice has been ignored`
+      );
+    } else {
+      return filteredCandidates.slice(0, amountSlice);
+    }
+  }
   return filteredCandidates;
 };
 export { filterCandidates };
