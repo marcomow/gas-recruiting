@@ -1,4 +1,4 @@
-# Google Apps Scripts Recruiting (Prototyping)
+# Google Apps Scripts Recruiting
 
 This is the prototype Google Sheet (Apps Script) which our talent recruiting campaigns will fork.
 
